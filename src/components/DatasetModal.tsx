@@ -25,10 +25,12 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerElementRef = useRef<HTMLElement | null>(null);
 
   // Close on Escape key and manage focus
   useEffect(() => {
     if (!isOpen) return;
+    triggerElementRef.current = document.activeElement as HTMLElement | null;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -42,6 +44,7 @@ export const DatasetModal: React.FC<DatasetModalProps> = ({
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      triggerElementRef.current?.focus();
     };
   }, [isOpen, onClose]);
 

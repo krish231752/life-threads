@@ -351,8 +351,17 @@ export const TheLifeOverview: React.FC<TheLifeOverviewProps> = ({
           {chapters.map((ch, idx) => (
             <div
               key={ch.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Explore Chapter 0${idx + 1}: ${ch.title}`}
               onClick={() => onNavigateToTab('chapters')}
-              className="cursor-pointer rounded-2xl border border-white/[0.08] bg-[#0E111A] p-5 space-y-3 hover:border-indigo-500/40 hover:bg-[#121622] transition group"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onNavigateToTab('chapters');
+                }
+              }}
+              className="cursor-pointer rounded-2xl border border-white/[0.08] bg-[#0E111A] p-5 space-y-3 hover:border-indigo-500/40 hover:bg-[#121622] transition group focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
             >
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[11px] text-white/40">CHAPTER 0{idx + 1}</span>

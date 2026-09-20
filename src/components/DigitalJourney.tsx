@@ -210,7 +210,7 @@ export const DigitalJourney: React.FC<DigitalJourneyProps> = ({
               aria-label="Chronological node sequence"
               className="relative py-4 overflow-x-auto scrollbar-none"
             >
-              <div className="flex items-center gap-3 min-w-max py-4 px-2">
+              <div role="presentation" className="flex items-center gap-3 min-w-max py-4 px-2">
                 {filteredReceipts.map((rcpt, idx) => {
                   const meta = RECEIPT_TYPE_META[rcpt.type];
                   const Icon = meta.icon;
@@ -221,6 +221,7 @@ export const DigitalJourney: React.FC<DigitalJourneyProps> = ({
                       key={rcpt.id}
                       role="listitem"
                       tabIndex={0}
+                      aria-current={isSelected ? 'true' : undefined}
                       aria-label={`${rcpt.title}, ${formatTimestamp(rcpt.timestamp).date}`}
                       onClick={() => setActiveReceiptId(rcpt.id)}
                       onKeyDown={(e) => {

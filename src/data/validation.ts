@@ -17,18 +17,33 @@ export const VALID_RECEIPT_TYPES: Set<ReceiptType> = new Set([
 ]);
 
 /**
- * Strips dangerous HTML tags and script patterns to prevent XSS.
+ * Dangerous object prototype keys forbidden to prevent prototype pollution.
+ */
+export const FORBIDDEN_OBJECT_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
+/**
+ * Strips dangerous HTML tags, event handlers, script patterns, and forbidden keys to prevent XSS & prototype pollution.
  */
 export function sanitizeString(val: unknown, maxLength = MAX_STRING_LENGTH): string {
   if (val === null || val === undefined) return '';
-  const str = String(val).trim();
-  // Strip script tags, HTML tags, and dangerous javascript: or data: URIs
+  const str = String(val).replace(/\0/g, '').trim();
+
+  // Strip script tags, HTML tags, event handlers, and dangerous URIs
   const cleaned = str
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/<[^>]+>/g, '')
     .replace(/javascript:/gi, '')
-    .replace(/data:text\/html/gi, '');
+    .replace(/data:text\/html/gi, '')
+    .replace(/on\w+\s*=/gi, '');
+
   return cleaned.length > maxLength ? cleaned.slice(0, maxLength) + '...' : cleaned;
+}
+
+/**
+ * Checks whether an object key is safe against prototype pollution.
+ */
+export function isSafeKey(key: string): boolean {
+  return typeof key === 'string' && !FORBIDDEN_OBJECT_KEYS.has(key.toLowerCase().trim());
 }
 
 /**

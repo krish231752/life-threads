@@ -14,8 +14,10 @@ export function clearConnectionCache(): void {
  * Calculate distance in minutes between two ISO timestamps
  */
 export function getMinutesApart(ts1: string, ts2: string): number {
+  if (!ts1 || !ts2) return 999999;
   const d1 = new Date(ts1).getTime();
   const d2 = new Date(ts2).getTime();
+  if (isNaN(d1) || isNaN(d2)) return 999999;
   return Math.abs(d1 - d2) / (1000 * 60);
 }
 
@@ -23,6 +25,7 @@ export function getMinutesApart(ts1: string, ts2: string): number {
  * Formats time difference in human readable string
  */
 export function formatTimeDifference(mins: number): string {
+  if (isNaN(mins) || mins >= 999999) return 'Different timeframes';
   if (mins < 1) return 'Happened almost simultaneously (< 1 min)';
   if (mins < 60) return `${Math.round(mins)} minutes apart`;
   const hours = mins / 60;
@@ -685,7 +688,10 @@ export function calculateLifeStats(receipts: Receipt[]): LifeStats {
       }
     : undefined;
 
-  const timestamps = receipts.map((r) => new Date(r.timestamp).getTime()).sort((a, b) => a - b);
+  const timestamps = receipts
+    .map((r) => new Date(r.timestamp).getTime())
+    .filter((t) => !isNaN(t))
+    .sort((a, b) => a - b);
   const start = timestamps.length ? new Date(timestamps[0]).toISOString() : new Date().toISOString();
   const end = timestamps.length ? new Date(timestamps[timestamps.length - 1]).toISOString() : new Date().toISOString();
   const daysCount = timestamps.length

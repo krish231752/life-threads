@@ -106,4 +106,23 @@ describe('Relationship Engine Logic', () => {
     expect(populatedStats.totalSpend).toBe(699);
     expect(populatedStats.totalPlaces).toBeGreaterThanOrEqual(2);
   });
+
+  it('handles invalid or corrupted timestamps without producing NaN or crashes', () => {
+    const corruptReceiptA: Receipt = {
+      ...sampleReceiptA,
+      timestamp: 'invalid-date',
+    };
+    const corruptReceiptB: Receipt = {
+      ...sampleReceiptB,
+      timestamp: '',
+    };
+
+    const { score } = calculateReceiptConnection(corruptReceiptA, corruptReceiptB);
+    expect(isNaN(score)).toBe(false);
+    expect(score).toBeGreaterThanOrEqual(0);
+
+    const stats = calculateLifeStats([corruptReceiptA, corruptReceiptB]);
+    expect(isNaN(stats.totalMoments)).toBe(false);
+    expect(stats.totalMoments).toBe(2);
+  });
 });

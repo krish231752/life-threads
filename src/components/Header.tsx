@@ -49,10 +49,16 @@ export const Header: React.FC<HeaderProps> = ({
 
         <div className="flex items-center gap-2">
           {/* Persona Switchers */}
-          <div className="flex items-center rounded-lg bg-white/[0.04] p-0.5 border border-white/[0.08]">
+          <div 
+            role="radiogroup" 
+            aria-label="Select fictional life persona" 
+            className="flex items-center rounded-lg bg-white/[0.04] p-0.5 border border-white/[0.08]"
+          >
             <button
+              role="radio"
+              aria-checked={activePersona === 'elena'}
               onClick={() => onSelectPersona('elena')}
-              className={`px-2.5 py-1 text-xs font-medium rounded transition ${
+              className={`px-2.5 py-1 text-xs font-medium rounded transition focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none ${
                 activePersona === 'elena'
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -61,8 +67,10 @@ export const Header: React.FC<HeaderProps> = ({
               Elena Vance
             </button>
             <button
+              role="radio"
+              aria-checked={activePersona === 'marcus'}
               onClick={() => onSelectPersona('marcus')}
-              className={`px-2.5 py-1 text-xs font-medium rounded transition ${
+              className={`px-2.5 py-1 text-xs font-medium rounded transition focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none ${
                 activePersona === 'marcus'
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -75,8 +83,9 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Upload Custom JSON */}
           <button
             onClick={onOpenUpload}
-            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-medium text-white/70 hover:bg-white/[0.08] hover:text-white transition"
+            className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-medium text-white/70 hover:bg-white/[0.08] hover:text-white transition focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none"
             title="Upload or Paste any Life Receipts JSON"
+            aria-label="Upload or Paste Custom JSON Dataset"
           >
             <Upload className="h-3 w-3 text-amber-400" />
             <span className="hidden md:inline">Custom JSON</span>
@@ -87,9 +96,10 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Main Bar */}
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <div 
+          <button 
             onClick={() => onTabChange('overview')}
-            className="flex cursor-pointer items-center gap-2.5 group"
+            aria-label="LIFE//THREADS Home Overview"
+            className="flex cursor-pointer items-center gap-2.5 group text-left focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none rounded-xl"
           >
             <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/30 text-amber-300 shadow-inner group-hover:border-amber-400 transition">
               <span className="font-mono text-sm font-bold tracking-tighter">✦</span>
@@ -107,14 +117,23 @@ export const Header: React.FC<HeaderProps> = ({
                 Hundreds of moments. One life. Follow the threads.
               </p>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Primary View Navigation */}
-        <nav className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto py-1 scrollbar-none">
+        <nav 
+          role="tablist" 
+          aria-label="Narrative view modes"
+          className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto py-1 scrollbar-none"
+        >
           <button
+            role="tab"
+            id="tab-overview"
+            aria-selected={activeTab === 'overview'}
+            aria-controls="main-content"
+            tabIndex={activeTab === 'overview' ? 0 : -1}
             onClick={() => onTabChange('overview')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               activeTab === 'overview'
                 ? 'bg-white/10 text-white border border-white/20 shadow-sm'
                 : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -125,8 +144,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            role="tab"
+            id="tab-chapters"
+            aria-selected={activeTab === 'chapters'}
+            aria-controls="main-content"
+            tabIndex={activeTab === 'chapters' ? 0 : -1}
             onClick={() => onTabChange('chapters')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               activeTab === 'chapters'
                 ? 'bg-white/10 text-white border border-white/20 shadow-sm'
                 : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -137,8 +161,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            role="tab"
+            id="tab-threads"
+            aria-selected={activeTab === 'threads'}
+            aria-controls="main-content"
+            tabIndex={activeTab === 'threads' ? 0 : -1}
             onClick={() => onTabChange('threads')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap relative ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap relative focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               activeTab === 'threads'
                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
                 : 'text-white/70 hover:text-white hover:bg-white/[0.04]'
@@ -150,8 +179,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            role="tab"
+            id="tab-connect-dots"
+            aria-selected={activeTab === 'connect-dots'}
+            aria-controls="main-content"
+            tabIndex={activeTab === 'connect-dots' ? 0 : -1}
             onClick={() => onTabChange('connect-dots')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               activeTab === 'connect-dots'
                 ? 'bg-white/10 text-white border border-white/20 shadow-sm'
                 : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -162,8 +196,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            role="tab"
+            id="tab-journey"
+            aria-selected={activeTab === 'journey'}
+            aria-controls="main-content"
+            tabIndex={activeTab === 'journey' ? 0 : -1}
             onClick={() => onTabChange('journey')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               activeTab === 'journey'
                 ? 'bg-white/10 text-white border border-white/20 shadow-sm'
                 : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -174,8 +213,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            role="tab"
+            id="tab-explorer"
+            aria-selected={activeTab === 'explorer'}
+            aria-controls="main-content"
+            tabIndex={activeTab === 'explorer' ? 0 : -1}
             onClick={() => onTabChange('explorer')}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition whitespace-nowrap focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
               activeTab === 'explorer'
                 ? 'bg-white/10 text-white border border-white/20 shadow-sm'
                 : 'text-white/60 hover:text-white hover:bg-white/[0.04]'

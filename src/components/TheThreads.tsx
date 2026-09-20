@@ -266,7 +266,7 @@ export const TheThreads: React.FC<TheThreadsProps> = ({
                   This moment has no strong connections yet.
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="list">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="group" aria-label="Discovered connection nodes">
                   {connections.map((conn, idx) => {
                     const isSelected = idx === selectedConnectionIndex;
                     const meta = RECEIPT_TYPE_META[conn.receipt.type];
@@ -283,7 +283,7 @@ export const TheThreads: React.FC<TheThreadsProps> = ({
                             setSelectedConnectionIndex(idx);
                           }
                         }}
-                        role="listitem"
+                        aria-pressed={isSelected}
                         aria-label={`Select connection: ${conn.receipt.title}, ${Math.round(conn.score * 100)}% match`}
                         className={`relative flex items-start gap-3 rounded-xl p-3.5 text-left transition border focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none ${
                           isSelected

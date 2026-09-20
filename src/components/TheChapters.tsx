@@ -49,14 +49,23 @@ export const TheChapters: React.FC<TheChaptersProps> = ({
       </div>
 
       {/* Interactive Chapter Stepper / Timeline Scrubber */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div 
+        role="tablist" 
+        aria-label="Life narrative chapters"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+      >
         {chapters.map((ch, idx) => {
           const isActive = ch.id === currentChapter?.id;
           return (
             <button
               key={ch.id}
+              role="tab"
+              id={`chapter-tab-${ch.id}`}
+              aria-selected={isActive}
+              aria-controls={`chapter-panel-${ch.id}`}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveChapterId(ch.id)}
-              className={`group relative flex flex-col justify-between rounded-2xl p-5 text-left transition border ${
+              className={`group relative flex flex-col justify-between rounded-2xl p-5 text-left transition border focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
                 isActive
                   ? 'border-indigo-400/80 bg-indigo-950/20 shadow-lg shadow-indigo-500/10'
                   : 'border-white/[0.08] bg-[#0E111A] hover:border-white/20 hover:bg-[#121622]'
@@ -94,7 +103,12 @@ export const TheChapters: React.FC<TheChaptersProps> = ({
 
       {/* Active Chapter Detailed Narrative Presentation */}
       {currentChapter && (
-        <div className="space-y-8">
+        <div 
+          id={`chapter-panel-${currentChapter.id}`}
+          role="tabpanel"
+          aria-labelledby={`chapter-tab-${currentChapter.id}`}
+          className="space-y-8"
+        >
           <div className="rounded-3xl border border-white/[0.08] bg-[#0E111A] p-6 sm:p-10 space-y-8">
             {/* Top Chapter Metadata */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/[0.06]">
@@ -188,8 +202,17 @@ export const TheChapters: React.FC<TheChaptersProps> = ({
                   return (
                     <div
                       key={rcpt.id}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`View details for ${rcpt.title} (${meta.label})`}
                       onClick={() => onSelectReceipt(rcpt)}
-                      className="group cursor-pointer rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:border-white/20 hover:bg-white/[0.05] transition flex flex-col justify-between"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectReceipt(rcpt);
+                        }
+                      }}
+                      className="group cursor-pointer rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:border-white/20 hover:bg-white/[0.05] transition flex flex-col justify-between focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">

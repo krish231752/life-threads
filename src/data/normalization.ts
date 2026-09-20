@@ -1,5 +1,5 @@
 import { Receipt, ReceiptType } from '../types';
-import { sanitizeString, isValidDate, VALID_RECEIPT_TYPES } from './validation';
+import { sanitizeString, isValidDate, VALID_RECEIPT_TYPES, isSafeKey } from './validation';
 
 /**
  * Maps arbitrary category / type strings to supported ReceiptType enum.
@@ -113,10 +113,12 @@ export function normalizeDataset(rawItems: any[]): Receipt[] {
     }
 
     // Metadata preservation and sanitization
-    const metadata: Record<string, any> = {};
+    const metadata: Record<string, any> = Object.create(null);
     if (rawObj.metadata && typeof rawObj.metadata === 'object') {
       Object.entries(rawObj.metadata).forEach(([k, v]) => {
+        if (!isSafeKey(k)) return;
         const cleanKey = sanitizeString(k, 40);
+        if (!cleanKey) return;
         if (typeof v === 'string') {
           metadata[cleanKey] = sanitizeString(v, 300);
         } else if (typeof v === 'number' && !isNaN(v)) {

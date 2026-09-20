@@ -69,4 +69,22 @@ describe('Dataset Normalization & Resilient Parsing', () => {
     expect(normalized[0].title).toContain('Safe Title');
     expect(normalized[0].subtitle).not.toContain('onerror');
   });
+
+  it('prevents prototype pollution via metadata keys', () => {
+    const maliciousJson = JSON.parse('{"__proto__": {"polluted": true}, "constructor": {"polluted": true}, "normalKey": "safe"}');
+    const rawItems = [
+      {
+        id: 'proto-test',
+        title: 'Prototype test',
+        type: 'notes',
+        timestamp: '2025-01-01T12:00:00Z',
+        metadata: maliciousJson,
+      }
+    ];
+
+    const normalized = normalizeDataset(rawItems);
+    expect((({} as any)).polluted).toBeUndefined();
+    expect(normalized[0].metadata.normalKey).toBe('safe');
+    expect(normalized[0].metadata.__proto__).toBeUndefined();
+  });
 });

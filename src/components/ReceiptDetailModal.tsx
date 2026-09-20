@@ -33,9 +33,12 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
   onSelectConnectedReceipt,
 }) => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerElementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!receipt) return;
+    triggerElementRef.current = document.activeElement as HTMLElement | null;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
@@ -46,6 +49,7 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      triggerElementRef.current?.focus();
     };
   }, [receipt, onClose]);
 
