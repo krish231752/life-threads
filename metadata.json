@@ -1,0 +1,6 @@
+{
+  "name": "LIFE//THREADS",
+  "description": "Hundreds of moments. One life. Follow the threads. Interactive digital-life narrative engine transforming fragmented digital receipts into explainable relationships, moments, and behavioral chapters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
